@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador de Textos (Azure AI Language LAB)</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔤 Analisador de Textos</h1>
+        <p class="subtitle">Azure AI Language LAB</p>
+        <p class="description">
+            Cole um texto e escolha quais análises executar usando o
+            <a href="https://learn.microsoft.com/en-us/azure/ai-services/language-service/overview" target="_blank">Azure AI Language</a>.
+        </p>
+
+        <form id="analyzeForm" action="/analyze" method="post">
+            <!-- Texto de entrada -->
+            <label for="text">
+                Texto para análise (máx {{ max_length }} caracteres):
+            </label>
+            <textarea
+                id="text"
+                name="text"
+                rows="8"
+                maxlength="{{ max_length }}"
+                placeholder="Cole ou digite aqui o texto que deseja analisar…"
+                required
+            ></textarea>
+            <div class="char-counter">
+                <span id="charCount">0</span> / {{ max_length }} caracteres
+            </div>
+
+            <!-- Seleção de features -->
+            <fieldset class="features-fieldset">
+                <legend>Análises a executar:</legend>
+                <div class="features-grid">
+                    <label class="feature-option">
+                        <input type="checkbox" name="features" value="sentiment" checked>
+                        🎭 Sentimento
+                    </label>
+                    <label class="feature-option">
+                        <input type="checkbox" name="features" value="key_phrases" checked>
+                        🔑 Frases-Chave
+                    </label>
+                    <label class="feature-option">
+                        <input type="checkbox" name="features" value="entities" checked>
+                        🏷️ Entidades (NER)
+                    </label>
+                    <label class="feature-option">
+                        <input type="checkbox" name="features" value="pii" checked>
+                        🔒 PII (Dados Pessoais)
+                    </label>
+                    <label class="feature-option">
+                        <input type="checkbox" name="features" value="language" checked>
+                        🌍 Idioma
+                    </label>
+                </div>
+            </fieldset>
+
+            <!-- Orientação: o que cada análise faz -->
+            <div class="help-box">
+                <strong>O que cada análise faz?</strong>
+                Estas são features preconfigured (pré-treinadas) do
+                <a href="https://learn.microsoft.com/en-us/azure/ai-services/language-service/overview" target="_blank">Azure AI Language</a>:
+                <ul>
+                    <li><strong>🎭 Sentimento</strong>
+                        (<a href="https://learn.microsoft.com/en-us/azure/ai-services/language-service/sentiment-opinion-mining/overview" target="_blank">Sentiment Analysis</a>)
+                        — Identifica se o texto é <em>positivo, negativo, neutro ou misto</em>.
+                        Analisa frase a frase com scores de confiança.</li>
+                    <li><strong>🔑 Frases-Chave</strong>
+                        (<a href="https://learn.microsoft.com/en-us/azure/ai-services/language-service/key-phrase-extraction/overview" target="_blank">Key Phrase Extraction</a>)
+                        — Extrai os <em>termos e conceitos mais relevantes</em> do texto.</li>
+                    <li><strong>🏷️ Entidades (NER)</strong>
+                        (<a href="https://learn.microsoft.com/en-us/azure/ai-services/language-service/named-entity-recognition/overview" target="_blank">Named Entity Recognition</a>)
+                        — Detecta e categoriza <em>pessoas, locais, organizações, datas,
+                        quantidades</em> e outras entidades no texto.</li>
+                    <li><strong>🔒 PII</strong>
+                        (<a href="https://learn.microsoft.com/en-us/azure/ai-services/language-service/personally-identifiable-information/overview" target="_blank">PII Detection</a>)
+                        — Identifica <em>dados pessoais</em> (e-mail, telefone, CPF/SSN,
+                        cartão de crédito, etc.) e gera uma versão mascarada do texto.</li>
+                    <li><strong>🌍 Idioma</strong>
+                        (<a href="https://learn.microsoft.com/en-us/azure/ai-services/language-service/language-detection/overview" target="_blank">Language Detection</a>)
+                        — Detecta o <em>idioma predominante</em> do texto entre 100+ idiomas.</li>
+                </ul>
+            </div>
+
+            <button type="submit" id="btnAnalyze">Analisar</button>
+        </form>
+
+        <div id="status"></div>
+    </div>
+
+    <script>
+        // Character counter
+        const textarea = document.getElementById('text');
+        const charCount = document.getElementById('charCount');
+        textarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+
+        // Form submit feedback
+        const form = document.getElementById('analyzeForm');
+        const statusDiv = document.getElementById('status');
+        const btn = document.getElementById('btnAnalyze');
+        form.onsubmit = function() {
+            // Check if at least one feature is selected
+            const checked = form.querySelectorAll('input[name="features"]:checked');
+            if (checked.length === 0) {
+                statusDiv.innerHTML = '⚠️ Selecione pelo menos uma análise.';
+                statusDiv.style.color = '#dc3545';
+                return false;
+            }
+            btn.disabled = true;
+            btn.textContent = 'Analisando…';
+            statusDiv.innerHTML = '⏳ Enviando e analisando, aguarde…';
+            statusDiv.style.color = '#0078d4';
+        };
+    </script>
+</body>
+</html>

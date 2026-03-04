@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado — Analisador de Textos LAB</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container wide">
+        <h1>🔤 Resultado da Análise</h1>
+
+        <!-- Errors (if any feature failed) -->
+        {% if result.errors %}
+        <div class="alert alert-warning">
+            ⚠️ <strong>Algumas análises falharam:</strong>
+            <ul>
+                {% for feat, err in result.errors.items() %}
+                <li><strong>{{ feature_names.get(feat, feat) }}:</strong> {{ err }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Metadata card -->
+        <div class="card">
+            <h2>📋 Resumo</h2>
+            <table class="summary-table">
+                <tr>
+                    <th>ID da Análise</th>
+                    <td><code>{{ result.analysis_id }}</code></td>
+                </tr>
+                <tr>
+                    <th>Tamanho do Texto</th>
+                    <td>{{ result.text_length }} caracteres</td>
+                </tr>
+                <tr>
+                    <th>Análises Executadas</th>
+                    <td>
+                        {% for f in result.features_requested %}
+                        <span class="badge badge-feature">{{ feature_names.get(f, f) }}</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Input text (collapsible) -->
+        <div class="card">
+            <details>
+                <summary>📝 Texto Original (clique para expandir)</summary>
+                <div class="original-text">{{ result.input_text }}</div>
+            </details>
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- LANGUAGE DETECTION -->
+        <!-- ============================================================= -->
+        {% if result.language %}
+        <div class="card">
+            <h2>🌍 Detecção de Idioma</h2>
+            <table class="summary-table">
+                <tr>
+                    <th>Idioma Detectado</th>
+                    <td><strong>{{ result.language.primary.name }}</strong></td>
+                </tr>
+                <tr>
+                    <th>Código ISO</th>
+                    <td><code>{{ result.language.primary.iso_code }}</code></td>
+                </tr>
+                <tr>
+                    <th>Confiança</th>
+                    <td>{{ "%.0f" | format(result.language.primary.confidence * 100) }}%</td>
+                </tr>
+            </table>
+        </div>
+        {% endif %}
+
+        <!-- ============================================================= -->
+        <!-- SENTIMENT ANALYSIS -->
+        <!-- ============================================================= -->
+        {% if result.sentiment %}
+        <div class="card">
+            <h2>🎭 Análise de Sentimento</h2>
+
+            <!-- Overall sentiment -->
+            <div class="sentiment-overall">
+                <span class="sentiment-label sentiment-{{ result.sentiment.sentiment }}">
+                    {% if result.sentiment.sentiment == "positive" %}😊 Positivo
+                    {% elif result.sentiment.sentiment == "negative" %}😞 Negativo
+                    {% elif result.sentiment.sentiment == "mixed" %}😐 Misto
+                    {% else %}😶 Neutro{% endif %}
+                </span>
+            </div>
+
+            <!-- Score bars -->
+            <div class="sentiment-bars">
+                <div class="sentiment-bar-row">
+                    <span class="bar-label">Positivo</span>
+                    <div class="bar-track">
+                        <div class="bar-fill bar-positive" style="width: {{ (result.sentiment.positive * 100) | round(1) }}%"></div>
+                    </div>
+                    <span class="bar-value">{{ "%.0f" | format(result.sentiment.positive * 100) }}%</span>
+                </div>
+                <div class="sentiment-bar-row">
+                    <span class="bar-label">Neutro</span>
+                    <div class="bar-track">
+                        <div class="bar-fill bar-neutral" style="width: {{ (result.sentiment.neutral * 100) | round(1) }}%"></div>
+                    </div>
+                    <span class="bar-value">{{ "%.0f" | format(result.sentiment.neutral * 100) }}%</span>
+                </div>
+                <div class="sentiment-bar-row">
+                    <span class="bar-label">Negativo</span>
+                    <div class="bar-track">
+                        <div class="bar-fill bar-negative" style="width: {{ (result.sentiment.negative * 100) | round(1) }}%"></div>
+                    </div>
+                    <span class="bar-value">{{ "%.0f" | format(result.sentiment.negative * 100) }}%</span>
+                </div>
+            </div>
+
+            <!-- Per-sentence breakdown -->
+            {% if result.sentiment.sentences | length > 1 %}
+            <details class="sentence-details">
+                <summary>Ver sentimento por frase ({{ result.sentiment.sentences | length }} frases)</summary>
+                <div class="table-wrapper">
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Frase</th>
+                                <th>Sentimento</th>
+                                <th>Pos.</th>
+                                <th>Neutro</th>
+                                <th>Neg.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in result.sentiment.sentences %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td class="sentence-text">{{ s.text }}</td>
+                                <td>
+                                    <span class="badge sentiment-{{ s.sentiment }}">
+                                        {{ s.sentiment | capitalize }}
+                                    </span>
+                                </td>
+                                <td>{{ "%.0f" | format(s.positive * 100) }}%</td>
+                                <td>{{ "%.0f" | format(s.neutral * 100) }}%</td>
+                                <td>{{ "%.0f" | format(s.negative * 100) }}%</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </details>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- ============================================================= -->
+        <!-- KEY PHRASES -->
+        <!-- ============================================================= -->
+        {% if result.key_phrases %}
+        <div class="card">
+            <h2>🔑 Frases-Chave</h2>
+            {% if result.key_phrases.key_phrases %}
+            <div class="tags-container">
+                {% for phrase in result.key_phrases.key_phrases %}
+                <span class="tag">{{ phrase }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="muted">Nenhuma frase-chave extraída.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- ============================================================= -->
+        <!-- NAMED ENTITY RECOGNITION -->
+        <!-- ============================================================= -->
+        {% if result.entities %}
+        <div class="card">
+            <h2>🏷️ Entidades Reconhecidas (NER)</h2>
+            {% if result.entities.entities %}
+            <div class="table-wrapper">
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Texto</th>
+                            <th>Categoria</th>
+                            <th>Subcategoria</th>
+                            <th>Confiança</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for e in result.entities.entities %}
+                        <tr>
+                            <td><strong>{{ e.text }}</strong></td>
+                            <td><span class="badge badge-category">{{ e.category }}</span></td>
+                            <td>{{ e.subcategory or "—" }}</td>
+                            <td>{{ "%.0f" | format(e.confidence * 100) }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="muted">Nenhuma entidade reconhecida.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- ============================================================= -->
+        <!-- PII DETECTION -->
+        <!-- ============================================================= -->
+        {% if result.pii %}
+        <div class="card">
+            <h2>🔒 Detecção de PII (Dados Pessoais)</h2>
+
+            {% if result.pii.entities %}
+            <h3>Texto com PII Mascarado</h3>
+            <div class="redacted-text">{{ result.pii.redacted_text }}</div>
+
+            <h3>Entidades PII Detectadas</h3>
+            <div class="table-wrapper">
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Dado Original</th>
+                            <th>Tipo</th>
+                            <th>Subtipo</th>
+                            <th>Confiança</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for e in result.pii.entities %}
+                        <tr>
+                            <td><code>{{ e.text }}</code></td>
+                            <td><span class="badge badge-pii">{{ e.category }}</span></td>
+                            <td>{{ e.subcategory or "—" }}</td>
+                            <td>{{ "%.0f" | format(e.confidence * 100) }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="muted">Nenhum dado pessoal (PII) detectado neste texto. ✅</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- ============================================================= -->
+        <!-- ACTIONS -->
+        <!-- ============================================================= -->
+        <div class="actions">
+            <a href="/download/json/{{ result.analysis_id }}" class="btn">⬇ Baixar JSON</a>
+            <a href="/" class="btn btn-outline">← Nova Análise</a>
+        </div>
+    </div>
+</body>
+</html>

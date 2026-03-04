@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+.env
+.env.local
+.env.*.local
+!.env.example
+*.sqlite3
+*.db
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+
+# Test
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+
+# Virtual environment
+venv/
+.venv/
+
+# Logs
+*.log
