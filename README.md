@@ -1,7 +1,7 @@
 # 🔤 Analisador de Textos com Azure AI Language
 
 [![License: MIT](https://img.shields.io/badge/Licença-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.11-3.12](https://img.shields.io/badge/python-3.11--3.12-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
 **Lab prático:** Aprenda a integrar as features de **Text Analytics** do **Azure AI Language** com FastAPI — incluindo **Análise de Sentimento**, **Extração de Frases-Chave**, **Reconhecimento de Entidades (NER)**, **Detecção de PII** e **Detecção de Idioma**.
 
@@ -66,7 +66,8 @@ Com este lab, basta colar o texto, selecionar as análises, clicar em "Analisar"
 ## 🛠️ Requisitos
 
 - **Seu computador:** Windows 10/11 ou macOS
-- **Python:** 3.11 ou 3.12 (⚠️ NÃO validado com 3.13+ ou 3.14+)
+- **Python:** 3.11 ou superior (✅ testado até 3.14)
+- **Git:** Opcional, para clonar o repositório ([baixar aqui](https://git-scm.com/))
 - **Conta Azure:** Com recurso Azure AI Language criado
 - **VS Code:** Recomendado (opcional)
 - **Internet:** Conexão estável
@@ -94,7 +95,7 @@ Para quem já tem tudo configurado, em resumo será:
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/SEU_USUARIO/lab-azure-ai-language.git
+git clone https://github.com/ofabricio-oliveira/lab-azure-ai-language.git
 cd lab-azure-ai-language
 
 # Criar ambiente virtual
