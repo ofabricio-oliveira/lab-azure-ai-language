@@ -38,9 +38,9 @@ quase 40 minutos para trazer o pedido. Voltaria pela comida, mas não pelo servi
 
 ```
 Meu nome é Maria Oliveira e moro na Rua das Flores, 123 - São Paulo, SP.
-Meu e-mail é maria.oliveira@email.com, meu telefone é (11) 98765-4321 e
+Meu e-mail é maria.oliveira@email.com, meu telefone é (11) 0000-1234 e
 meu CPF é 123.456.789-00. Preciso atualizar meu cadastro no sistema.
-O número do meu cartão de crédito é 4111-1111-1111-1111.
+O número do meu cartão de crédito é 1111-1111-1111-1111.
 ```
 
 ---
@@ -48,10 +48,10 @@ O número do meu cartão de crédito é 4111-1111-1111-1111.
 ## 🏷️ Teste de Entidades (NER)
 
 ```
-A Microsoft anunciou em janeiro de 2026 que vai investir US$ 80 bilhões em
+A Empresa de Tecnologia anunciou em janeiro de 2026 que vai investir US$ 80 bilhões em
 data centers para inteligência artificial. O CEO Satya Nadella disse em Seattle
-que o Azure é a plataforma de nuvem que mais cresce no mundo. O Google e a
-Amazon também anunciaram investimentos similares na Europa e na Ásia.
+que o Azure é a plataforma de nuvem que mais cresce no mundo. Outras empresas de tecnologia
+também anunciaram investimentos similares na Europa e na Ásia.
 ```
 
 ---
@@ -91,21 +91,21 @@ procesar grandes volúmenes de datos de manera eficiente y segura.
 Este texto é ideal para testar **todas as 5 análises** de uma vez:
 
 ```
-Ontem participei de um workshop incrível da Microsoft em São Paulo sobre
-Azure AI e inteligência artificial. O palestrante João Mendes explicou como usar
+Ontem participei de um workshop incrível da Empresa XYZ em São Paulo sobre
+Azure AI e inteligência artificial. O palestrante Joãozinho explicou como usar
 os serviços de linguagem natural para processar textos automaticamente.
 
 O evento foi excelente, mas a internet do local era muito lenta, o que
 dificultou as demos ao vivo. No geral, saí muito satisfeito.
 
 Para inscrição nos próximos eventos, envie um e-mail para
-eventos@microsoft.com ou ligue para (11) 3333-4444. Meu contato pessoal
-é joao.mendes@outlook.com.
+eventos@empresaxyz.com ou ligue para (11) 1111-2222. Meu contato pessoal
+é fulano@email.com.
 ```
 
 **O que esperar:**
 - **Sentimento:** Misto (positivo sobre o evento, negativo sobre a internet)
-- **Frases-Chave:** "workshop", "Microsoft", "Azure AI", "inteligência artificial", "serviços de linguagem natural"
-- **Entidades:** "Microsoft" (Organization), "São Paulo" (Location), "João Mendes" (Person), "Azure AI" (Product)
+- **Frases-Chave:** "workshop", "Empresa", "Azure AI", "inteligência artificial", "serviços de linguagem natural"
+- **Entidades:** "Empresa" (Organization), "São Paulo" (Location), "João Mendes" (Person), "Azure AI" (Product)
 - **PII:** E-mails e telefone detectados e mascarados
 - **Idioma:** Português (pt)
