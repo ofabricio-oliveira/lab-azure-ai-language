@@ -114,6 +114,8 @@ Aguarde ~2 minutos.
 
 ### 3.4 — Configurar .env
 
+Aqui precisaremos ter um arquivo chamado `.env`, então copie o arquivo `.env.example` e renomeie para `.env`.
+
 ```powershell
 copy .env.example .env
 ```
@@ -129,6 +131,7 @@ Edite o `.env`:
 AZURE_LANGUAGE_ENDPOINT=https://meu-language-lab-2026.cognitiveservices.azure.com
 AZURE_LANGUAGE_KEY=sua-chave-copiada-aqui
 ```
+Após editar o arquivo, salve-o.
 
 ⚠️ **O endpoint NÃO deve terminar com `/`**
 
